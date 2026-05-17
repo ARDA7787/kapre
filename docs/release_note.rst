@@ -1,75 +1,102 @@
 Release Note
 ^^^^^^^^^^^^
 
-* 21 Jan 2022
-  - 0.3.7
-    - Add [SpecAugment](https://github.com/keunwoochoi/kapre/pull/135) layer
+0.4.1 - 17 May 2026
+-------------------
 
-* 13 Nov 2021
-  - 0.3.6
-    - bugfix/pad end tflite #131
+* Fix ``SpecAugment`` mask value dtype handling and preserve non-float input dtypes.
+* Remove unintended ``Energy`` layer debug output.
+* Refresh packaging metadata, CI coverage, and documentation for the supported Python 3.9+ / TensorFlow 2.16-2.20 range.
 
-* 18 March 2021
-  - 0.3.5
-    - Add `kapre.time_frequency_tflite` which uses tflite for a faster CPU inference.
+0.4.0 - 13 Oct 2025
+-------------------
 
-* 29 Sep 2020
-  - 0.3.4
-    - Fix a bug in `kapre.backend.get_window_fn()`. Previously, it only correctly worked with `None` input and an error was raised when non-default value was set for `window_name` in any layer.
+* Add Keras 3 / TensorFlow 2.16-2.20 compatibility fixes.
+* Update the tested dependency floor to Python 3.9, NumPy 1.26+, and librosa 0.11+.
+* Add type-checking configuration and refresh serialization tests.
 
-* 15 Sep 2020
-  - 0.3.3
-    - `kapre.augmentation` is added
-    - `kapre.time_frequency.ConcatenateFrequencyMap` is added
-    - `kapre.composed.get_frequency_aware_conv2d` is added
-    - In `STFT` and `InverseSTFT`, keyword arg `window_fn` is renamed to `window_name` and it expects string value, not function.
-      - With this update, models with Kapre layers can be loaded with `h5` file format.
-    - `kapre.backend.get_window_fn` is added
+0.3.7 - 21 Jan 2022
+-------------------
 
-* 28 Aug 2020
-  - 0.3.2
-    - `kapre.signal.Frame` and `kapre.signal.Energy` are added
-    - `kapre.signal.LogmelToMFCC` is added
-    - `kapre.signal.MuLawEncoder` and `kapre.signal.MuLawDecoder` are added
-    - `kapre.composed.get_stft_magnitude_layer()` is added
-* 21 Aug 2020
-  - 0.3.1
-    - `Inverse STFT` is added
+* Add `SpecAugment <https://github.com/keunwoochoi/kapre/pull/135>`_ layer.
 
-* 15 Aug 2020
-  - 0.3.0
-    - Breaking and simplifying changes with Tensorflow 2.0 and more tests. Some features are removed.
+0.3.6 - 13 Nov 2021
+-------------------
 
-* 29 Jul 2020
-  - 0.2.0
-    - Change melspectrogram filterbank from `norm=1` to `norm='slaney'` (w.r.t. Librosa) due to the update from Librosa (https://github.com/keunwoochoi/kapre/issues/77)
-    This would change the behavior of melspectrogram slightly.
-    - Bump librosa version to 0.7.2 or higher.
+* Fix ``pad_end`` in the TFLite-compatible layers, via #131.
 
-* 17 Mar 2020
-  - 0.1.8
-    - added `utils.Delta` layer
+0.3.5 - 18 March 2021
+---------------------
 
-* 20 Feb 2020
-  - Kapre ver 0.1.7
-    - No vanilla Keras dependency
-    - Tensorflow >= 1.15 only
-    - Not tested on Python 2.7 anymore; only on Python 3.6 and 3.7 locally (by `tox`) and 3.6 on Travis
+* Add ``kapre.time_frequency_tflite`` which uses TFLite for faster CPU inference.
 
-* 20 Feb 2019
-  - Kapre ver 0.1.4
-    - Fixed amplitude-to-decibel error as raised in https://github.com/keunwoochoi/kapre/issues/46
+0.3.4 - 29 Sep 2020
+-------------------
 
-* March 2018
-  - Kapre ver 0.1.3
-    - Kapre is on Pip again
-    - Add unit tests
-    - Remove `Datasets`
-    - Remove some codes while adding more dependency on Librosa to make it cleaner and more stable
-      - and therefore `htk` option enabled in `Melspectrogram`
+* Fix a bug in ``kapre.backend.get_window_fn()``. Previously, it only correctly worked with ``None`` input and an error was raised when non-default value was set for ``window_name`` in any layer.
 
-* 9 July 2017
-  - Kapre ver 0.1.1, aka 'pretty stable' with a benchmark paper, https://arxiv.org/abs/1706.05781
-    - Remove STFT, python3 compatible
-    - A full documentation in this readme.md
-    - pip version is updated
+0.3.3 - 15 Sep 2020
+-------------------
+
+* Add ``kapre.augmentation``.
+* Add ``kapre.time_frequency.ConcatenateFrequencyMap``.
+* Add ``kapre.composed.get_frequency_aware_conv2d``.
+* In ``STFT`` and ``InverseSTFT``, rename keyword argument ``window_fn`` to ``window_name`` and expect a string value, not a function. With this update, models with Kapre layers can be loaded with ``h5`` file format.
+* Add ``kapre.backend.get_window_fn``.
+
+0.3.2 - 28 Aug 2020
+-------------------
+
+* Add ``kapre.signal.Frame`` and ``kapre.signal.Energy``.
+* Add ``kapre.signal.LogmelToMFCC``.
+* Add ``kapre.signal.MuLawEncoder`` and ``kapre.signal.MuLawDecoder``.
+* Add ``kapre.composed.get_stft_magnitude_layer()``.
+
+0.3.1 - 21 Aug 2020
+-------------------
+
+* Add ``Inverse STFT``.
+
+0.3.0 - 15 Aug 2020
+-------------------
+
+* Make breaking and simplifying changes with TensorFlow 2.0 and more tests. Some features are removed.
+
+0.2.0 - 29 Jul 2020
+-------------------
+
+* Change melspectrogram filterbank from ``norm=1`` to ``norm='slaney'`` (w.r.t. Librosa) due to the update from Librosa: https://github.com/keunwoochoi/kapre/issues/77. This changes the behavior of melspectrogram slightly.
+* Bump librosa version to 0.7.2 or higher.
+
+0.1.8 - 17 Mar 2020
+-------------------
+
+* Add ``utils.Delta`` layer.
+
+0.1.7 - 20 Feb 2020
+-------------------
+
+* Remove vanilla Keras dependency.
+* Require TensorFlow >= 1.15 only.
+* Stop testing on Python 2.7; test only on Python 3.6 and 3.7 locally (by ``tox``) and 3.6 on Travis.
+
+0.1.4 - 20 Feb 2019
+-------------------
+
+* Fix amplitude-to-decibel error as raised in https://github.com/keunwoochoi/kapre/issues/46.
+
+0.1.3 - March 2018
+------------------
+
+* Put Kapre on PyPI again.
+* Add unit tests.
+* Remove ``Datasets``.
+* Remove some code while adding more dependency on Librosa to make it cleaner and more stable, enabling the ``htk`` option in ``Melspectrogram``.
+
+0.1.1 - 9 July 2017
+-------------------
+
+* Release the “pretty stable” version with a benchmark paper: https://arxiv.org/abs/1706.05781.
+* Remove STFT, make Python 3 compatible.
+* Add full documentation in ``README.md``.
+* Update the PyPI version.

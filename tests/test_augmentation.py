@@ -110,7 +110,8 @@ def test_spec_augment_depth_exception():
 
 
 @pytest.mark.parametrize('data_format', ['default', 'channels_first', 'channels_last'])
-def test_spec_augment_layer(data_format, atol=1e-4):
+@pytest.mark.parametrize('mask_value', [0.0, -100])
+def test_spec_augment_layer(data_format, mask_value, atol=1e-4):
     """
     Tests the complete layer, checking if the parameter `training` has the expected behaviour.
     """
@@ -125,7 +126,7 @@ def test_spec_augment_layer(data_format, atol=1e-4):
             time_mask_param=10,
             n_freq_masks=4,
             n_time_masks=3,
-            mask_value=0.0,
+            mask_value=mask_value,
             data_format=data_format,
         )
     )

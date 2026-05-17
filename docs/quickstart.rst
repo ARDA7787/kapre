@@ -55,7 +55,7 @@ Use STFT Magnitude
     input_shape = (int(sampling_rate * duration), num_channel)  # let's follow `channels_last` convention
 
     model = Sequential()
-    model.add(STFT(n_fft=2048, win_length=2018, hop_length=1024,
+    model.add(STFT(n_fft=2048, win_length=2048, hop_length=1024,
                    window_name='hann_window', pad_end=False,
                    input_data_format='channels_last', output_data_format='channels_last',
                    input_shape=input_shape))  # complex64
@@ -162,6 +162,5 @@ Use STFT Magnitude -- a lazy version
     Non-trainable params: 0
     _________________________________________________________________
     """
-
 
 

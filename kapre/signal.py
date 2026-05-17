@@ -188,7 +188,6 @@ class Energy(Layer):
             A tensor with frame energies. The shape is (batch, time (frames), channel) if `channels_last`, or
             (batch, channel, time (frames)) if `channels_first`.
         """
-        tf.print("Input shape to Energy.call:", tf.shape(x))
         frames = tf.signal.frame(
             x,
             frame_length=self.frame_length,
@@ -197,14 +196,12 @@ class Energy(Layer):
             pad_value=self.pad_value,
             axis=self.time_axis,
         )
-        tf.print("Frames shape in Energy.call:", tf.shape(frames))
         frames = tf.math.square(frames)  # batch, ndim=4
 
         frame_axis = 2 if self.data_format == _CH_LAST_STR else 3
         energies = tf.math.reduce_sum(
             frames, axis=frame_axis
         )  # batch, ndim=3. (b, t, ch) or (b, ch, t)
-        tf.print("Energies shape in Energy.call:", tf.shape(energies))
 
         # normalize it to self.ref_duration
         nor_coeff = self.ref_duration / (self.frame_length / self.sample_rate)
