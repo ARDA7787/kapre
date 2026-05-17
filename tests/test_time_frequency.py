@@ -1,3 +1,6 @@
+import sys
+from importlib.metadata import PackageNotFoundError, version
+
 import pytest
 import numpy as np
 import tensorflow as tf
@@ -27,6 +30,26 @@ from kapre.composed import (
 )
 
 from utils import get_audio, save_load_compare, predict_using_tflite
+
+
+def _package_version_tuple(package_name):
+    try:
+        package_version = version(package_name)
+    except PackageNotFoundError:
+        return ()
+
+    release = []
+    for component in package_version.split('.')[:3]:
+        try:
+            release.append(int(component))
+        except ValueError:
+            break
+    return tuple(release)
+
+
+_TFLITE_KERAS_314_PY312_BROKEN = (
+    sys.version_info >= (3, 12) and _package_version_tuple('keras') >= (3, 14)
+)
 
 
 def _num_frame_valid(nsp_src, nsp_win, len_hop):
@@ -274,6 +297,10 @@ def test_melspectrogram_correctness(
 @pytest.mark.parametrize('batch_size', [1, 2])
 @pytest.mark.parametrize('win_length', [1000, 512])
 @pytest.mark.parametrize('pad_end', [False, True])
+@pytest.mark.xfail(
+    _TFLITE_KERAS_314_PY312_BROKEN,
+    reason='TensorFlow Lite conversion fails for Keras >= 3.14 on Python >= 3.12.',
+)
 def test_spectrogram_tflite_correctness(
     n_fft, hop_length, n_ch, data_format, batch_size, win_length, pad_end
 ):
