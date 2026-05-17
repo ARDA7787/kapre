@@ -29,7 +29,7 @@ def _get_image_data_format() -> str:
         import keras.config
 
         return keras.config.image_data_format()
-    except (ImportError, AttributeError):
+    except (ImportError, AttributeError, TypeError):
         try:
             # Try older Keras backend API
             return K.image_data_format()

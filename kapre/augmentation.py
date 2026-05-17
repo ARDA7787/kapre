@@ -228,6 +228,7 @@ class SpecAugment(Layer):
             (float `Tensor`): The masked spectrogram. Its shape is (time, freq, ch) or (ch, time, freq)
                 depending on x shape (that is, the input spectrogram).
         """
+        x = tf.convert_to_tensor(x)
         axis_limit_static = K.int_shape(x)[axis]
         axis_limit = tf.shape(x)[axis] if axis_limit_static is None else axis_limit_static
         axis_indices = tf.range(axis_limit)
