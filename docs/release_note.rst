@@ -1,6 +1,13 @@
 Release Note
 ^^^^^^^^^^^^
 
+0.4.1 - 17 May 2026
+-------------------
+
+* Fix ``SpecAugment`` mask value dtype handling and preserve non-float input dtypes.
+* Remove unintended ``Energy`` layer debug output.
+* Refresh packaging metadata, CI coverage, and documentation for the supported Python 3.9+ / TensorFlow 2.16-2.20 range.
+
 0.4.0 - 13 Oct 2025
 -------------------
 
