@@ -134,5 +134,9 @@ def test_validate_fail():
     _ = validate_data_format_str('weird_string')
 
 
+def test_get_image_data_format_returns_string():
+    assert KPB._get_image_data_format() in ('channels_first', 'channels_last')
+
+
 if __name__ == '__main__':
     pytest.main([__file__])

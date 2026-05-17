@@ -27,7 +27,8 @@ def _get_image_data_format() -> str:
     try:
         # Try newer Keras config API first (TensorFlow 2.13+)
         import keras.config
-        return keras.config.image_data_format
+
+        return keras.config.image_data_format()
     except (ImportError, AttributeError):
         try:
             # Try older Keras backend API
