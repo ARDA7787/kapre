@@ -1,2 +1,4 @@
-black kapre
-black tests
+#!/bin/bash
+set -euo pipefail
+
+black kapre tests scripts
