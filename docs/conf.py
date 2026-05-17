@@ -13,11 +13,23 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../'))
+import re
+from importlib.util import find_spec
+
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
+sys.path.insert(0, ROOT_DIR)
 import sphinx_rtd_theme
 
-autodoc_mock_imports = ['tensorflow', 'librosa', 'numpy']
+autodoc_mock_imports = [
+    dependency
+    for dependency in ('tensorflow', 'librosa', 'numpy')
+    if find_spec(dependency) is None
+]
 autodoc_member_order = 'bysource'
+if autodoc_mock_imports:
+    # When TensorFlow is mocked on Read the Docs, Sphinx reports mocked decorator signature warnings under the generic "autodoc" warning type; keeping this conditional preserves -W for references, rST, toctrees, and other documentation issues when the real dependencies are installed.
+    suppress_warnings = ['autodoc']
 
 
 # -- Project information -----------------------------------------------------
@@ -27,7 +39,11 @@ copyright = '2020, Keunwoo Choi, Deokjin Joo and Juho Kim'
 author = 'Keunwoo Choi, Deokjin Joo and Juho Kim'
 
 # The full version, including alpha/beta/rc tags
-release = '2017'
+with open(os.path.join(ROOT_DIR, 'kapre', '__init__.py'), 'r', encoding='utf-8') as f:
+    match = re.search(r"__version__\s*=\s*['\"]([^'\"]+)['\"]", f.read())
+    if not match:
+        raise RuntimeError("Unable to find version string in kapre/__init__.py")
+    release = match.group(1)
 
 # -- General configuration ---------------------------------------------------
 
@@ -40,15 +56,7 @@ extensions = [
     "sphinx.ext.viewcode",  # source linkage
     "sphinx.ext.napoleon",
     # "sphinx.ext.autosummary",
-    "sphinx.ext.viewcode",  # source linkage
-    "sphinxcontrib.inlinesyntaxhighlight"  # inline code highlight
 ]
-
-# https://stackoverflow.com/questions/21591107/sphinx-inline-code-highlight
-# use language set by highlight directive if no language is set by role
-inline_highlight_respect_highlight = True
-# use language set by highlight directive if no role is set
-inline_highlight_literals = True
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
@@ -84,9 +92,4 @@ html_css_files = [
 ]
 
 
-def setup(app):
-    app.add_stylesheet("css/custom.css")
-
-
 master_doc = 'index'
-

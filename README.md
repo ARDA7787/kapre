@@ -1,7 +1,7 @@
 # Kapre
 Keras Audio Preprocessors - compute STFT, ISTFT, Melspectrogram, and others on GPU real-time.
  
-Tested on Python 3.8+, with type hints for better development experience
+Tested on Python 3.9+ with TensorFlow 2.16-2.20, with type hints for better development experience
 
 ## Why Kapre?
 
@@ -87,7 +87,7 @@ Please refer to Kapre API Documentation at https://kapre.readthedocs.io
 
 ```python
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, BatchNormalization, ReLU, GlobalAveragePooling2D, Dense, Softmax
+from tensorflow.keras.layers import Input, Conv2D, BatchNormalization, ReLU, GlobalAveragePooling2D, Dense, Softmax
 from kapre import STFT, Magnitude, MagnitudeToDecibel
 from kapre.composed import get_melspectrogram_layer, get_log_frequency_spectrogram_layer
 
@@ -95,11 +95,11 @@ from kapre.composed import get_melspectrogram_layer, get_log_frequency_spectrogr
 input_shape = (44100, 6)
 sr = 44100
 model = Sequential()
+model.add(Input(shape=input_shape))
 # A STFT layer
-model.add(STFT(n_fft=2048, win_length=2018, hop_length=1024,
+model.add(STFT(n_fft=2048, win_length=2048, hop_length=1024,
                window_name=None, pad_end=False,
-               input_data_format='channels_last', output_data_format='channels_last',
-               input_shape=input_shape))
+               input_data_format='channels_last', output_data_format='channels_last'))
 model.add(Magnitude())
 model.add(MagnitudeToDecibel())  # these three layers can be replaced with get_stft_magnitude_layer()
 # Alternatively, you may want to use a melspectrogram layer
@@ -120,7 +120,7 @@ model.compile('adam', 'categorical_crossentropy') # if single-label classificati
 
 # train it with raw audio sample inputs
 # for example, you may have functions that load your data as below.
-x = load_x() # e.g., x.shape = (10000, 6, 44100)
+x = load_x() # e.g., x.shape = (10000, 44100, 6)
 y = load_y() # e.g., y.shape = (10000, 10) if it's 10-class classification
 # then..
 model.fit(x, y)
@@ -129,23 +129,23 @@ model.fit(x, y)
 
 * See the Jupyter notebook at the [example folder](https://github.com/keunwoochoi/kapre/tree/master/examples)
 
-## Tflite compatbility
+## TFLite compatibility
 
-The `STFT` layer is not tflite compatible (due to `tf.signal.stft`). To create a tflite
+The `STFT` layer is not TFLite compatible (due to `tf.signal.stft`). To create a TFLite
 compatible model, first train using the normal `kapre` layers then create a new
 model replacing `STFT` and `Magnitude` with `STFTTflite`, `MagnitudeTflite`.
-Tflite compatible layers are restricted to a batch size of 1 which prevents use
+TFLite compatible layers are restricted to a batch size of 1 which prevents use
 of them during training.
 
 ```python
 # assumes you have run the one-shot example above.
 from kapre import STFTTflite, MagnitudeTflite
 model_tflite = Sequential()
+model_tflite.add(Input(shape=input_shape))
 
-model_tflite.add(STFTTflite(n_fft=2048, win_length=2018, hop_length=1024,
+model_tflite.add(STFTTflite(n_fft=2048, win_length=2048, hop_length=1024,
                window_name=None, pad_end=False,
-               input_data_format='channels_last', output_data_format='channels_last',
-               input_shape=input_shape))
+               input_data_format='channels_last', output_data_format='channels_last'))
 model_tflite.add(MagnitudeTflite())
 model_tflite.add(MagnitudeToDecibel())  
 model_tflite.add(Conv2D(32, (3, 3), strides=(2, 2)))
@@ -172,4 +172,3 @@ Please cite this paper if you use Kapre for your work.
   organization={ICML}
 }
 ```
-
