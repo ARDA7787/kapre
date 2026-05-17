@@ -259,12 +259,13 @@ class SpecAugment(Layer):
                 ),
             )
             with tf.control_dependencies([axis_limit_check]):
-                axis_limit = tf.identity(axis_limit)
-                axis_indices = tf.identity(axis_indices)
-
-        axis_limit_repeated = tf.fill([n_masks], axis_limit)
-        axis_indices_repeated = tf.repeat(tf.expand_dims(axis_indices, 0), n_masks, axis=0)
-        mask_param_repeated = tf.fill([n_masks], mask_param)
+                axis_limit_repeated = tf.fill([n_masks], axis_limit)
+                axis_indices_repeated = tf.repeat(tf.expand_dims(axis_indices, 0), n_masks, axis=0)
+                mask_param_repeated = tf.fill([n_masks], mask_param)
+        else:
+            axis_limit_repeated = tf.fill([n_masks], axis_limit)
+            axis_indices_repeated = tf.repeat(tf.expand_dims(axis_indices, 0), n_masks, axis=0)
+            mask_param_repeated = tf.fill([n_masks], mask_param)
 
         masks = tf.map_fn(
             elems=(axis_limit_repeated, axis_indices_repeated, mask_param_repeated),
